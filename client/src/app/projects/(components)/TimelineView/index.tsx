@@ -21,10 +21,6 @@ function TimelineView({ projectId, setIsModalNewTaskOpen }: Props) {
     projectId: +projectId,
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error)
-    return <div>Error while fetching tasks: {JSON.stringify(error)}</div>;
-
   const [displayOptions, setDisplayOptions] = useState<DisplayOption>({
     viewMode: ViewMode.Month,
     locale: "en-US",
@@ -43,6 +39,10 @@ function TimelineView({ projectId, setIsModalNewTaskOpen }: Props) {
       })) || []
     );
   }, [tasks]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error)
+    return <div>Error while fetching tasks: {JSON.stringify(error)}</div>;
 
   function handleDisplayOptionsChange(
     event: React.ChangeEvent<HTMLSelectElement>,

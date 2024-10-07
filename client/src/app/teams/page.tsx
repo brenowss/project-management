@@ -11,7 +11,6 @@ import {
   GridToolbarExport,
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
-import Image from "next/image";
 import { dataGridClassNames, dataGridSxStyles } from "../lib/utils";
 
 const CustomToolbar = () => {

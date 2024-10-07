@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * Debounces a function, ensuring it is only called after a specified delay
  * since the last time it was invoked.

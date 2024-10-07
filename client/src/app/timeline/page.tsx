@@ -14,10 +14,6 @@ function TimelineView() {
 
   const { data: projects, error, isLoading } = useGetProjectsQuery();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error)
-    return <div>Error while fetching tasks: {JSON.stringify(error)}</div>;
-
   const [displayOptions, setDisplayOptions] = useState<DisplayOption>({
     viewMode: ViewMode.Month,
     locale: "en-US",
@@ -45,6 +41,10 @@ function TimelineView() {
       viewMode: event.target.value as ViewMode,
     }));
   }
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error)
+    return <div>Error while fetching tasks: {JSON.stringify(error)}</div>;
 
   return (
     <div className="max-w-full p-8">

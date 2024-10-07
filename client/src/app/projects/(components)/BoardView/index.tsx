@@ -83,7 +83,7 @@ const TaskColumn = ({
 
   const tasksCount = tasks?.length || 0;
 
-  const statusColor: any = {
+  const statusColor: Record<string, string> = {
     "To Do": "#2563EB",
     "Work In Progress": "#059669",
     "Under Review": "#D97706",
