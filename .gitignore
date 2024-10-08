@@ -6,3 +6,5 @@ client/.env
 server/.env
 client/.next
 *.pem
+.env.*
+client/.env.local
