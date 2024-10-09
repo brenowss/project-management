@@ -110,7 +110,6 @@ export const api = createApi({
           }
 
           const { userSub } = session;
-          const { accessToken } = session.tokens ?? {};
 
           const userDetailsResponse = await fetchWithBQ(`users/${userSub}`);
           const userDetails = userDetailsResponse.data as User;
@@ -122,9 +121,13 @@ export const api = createApi({
               userDetails,
             },
           };
-        } catch (error: any) {
+        } catch (error) {
           return {
-            error: error.message || "An error occurred",
+            error: {
+              status: 500,
+              statusText: "Internal Server Error",
+              data: JSON.stringify(error),
+            },
           };
         }
       },
