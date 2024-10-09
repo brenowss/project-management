@@ -3,12 +3,29 @@ import { Menu, Moon, Search, Settings, Sun } from "lucide-react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { toggleDarkMode, toggleSidebar } from "@/state";
+import { useGetAuthUserQuery } from "@/state/api";
+import { signOut } from "aws-amplify/auth";
+import Image from "next/image";
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
   const { isSideBarCollapsed, isDarkMode } = useAppSelector(
     (state) => state.global,
   );
+
+  const { data: currentUser } = useGetAuthUserQuery({});
+
+  async function handleSignOut() {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  if (!currentUser) return null;
+
+  const currentUserDetails = currentUser.userDetails;
 
   return (
     <div className="flex items-center justify-between bg-white px-4 py-3 dark:bg-black">
@@ -58,6 +75,32 @@ const Navbar = () => {
         </Link>
 
         <div className="ml-2 mr-5 hidden min-h-[2em] w-[0.1rem] bg-gray-200 md:inline-block"></div>
+        <div className="hidden items-center justify-between md:flex">
+          <div className="align-center flex h-9 w-9 justify-center">
+            {!!currentUserDetails?.profilePictureUrl ? (
+              <Image
+                src={`https://pm-s3-images-bucket.s3.amazonaws.com/${currentUserDetails.profilePictureUrl}`}
+                alt={currentUserDetails.username}
+                width={100}
+                height={50}
+                className="h-full rounded-full object-cover"
+              />
+            ) : (
+              <div className="h-9 w-9 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+            )}
+          </div>
+
+          <span className="mx-3 text-gray-800 dark:text-white">
+            {currentUserDetails?.username}
+          </span>
+
+          <button
+            className="hidden rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
+            onClick={handleSignOut}
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
     </div>
   );

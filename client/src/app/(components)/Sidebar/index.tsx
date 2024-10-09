@@ -2,7 +2,8 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { toggleSidebar } from "@/state";
-import { useGetProjectsQuery } from "@/state/api";
+import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
+import { signOut } from "aws-amplify/auth";
 import {
   AlertCircle,
   AlertOctagon,
@@ -33,6 +34,20 @@ function Sidebar() {
   const { data: projects } = useGetProjectsQuery();
   const dispatch = useAppDispatch();
   const { isSideBarCollapsed } = useAppSelector((state) => state.global);
+
+  const { data: currentUser } = useGetAuthUserQuery({});
+
+  async function handleSignOut() {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  if (!currentUser) return null;
+
+  const currentUserDetails = currentUser.userDetails;
 
   const sidebarLinks = useMemo(() => {
     return [
@@ -198,6 +213,34 @@ function Sidebar() {
             ))}
           </>
         )}
+      </div>
+      <div className="z-10 mt-32 flex w-full flex-col items-center gap-4 bg-white px-8 py-4 dark:bg-black md:hidden">
+        <div className="flex w-full items-center">
+          <div className="align-center flex h-9 w-9 justify-center">
+            {!!currentUserDetails?.profilePictureUrl ? (
+              <Image
+                src={`https://pm-s3-images-bucket.s3.amazonaws.com/${currentUserDetails.profilePictureUrl}`}
+                alt={currentUserDetails.username}
+                width={100}
+                height={50}
+                className="h-full rounded-full object-cover"
+              />
+            ) : (
+              <div className="h-9 w-9 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+            )}
+          </div>
+
+          <span className="mx-3 text-gray-800 dark:text-white">
+            {currentUserDetails?.username}
+          </span>
+
+          <button
+            className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
+            onClick={handleSignOut}
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
     </div>
   );

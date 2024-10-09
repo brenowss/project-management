@@ -1,6 +1,10 @@
 "use client";
 
-import { Priority, useGetTasksByUserQuery } from "@/state/api";
+import {
+  Priority,
+  useGetAuthUserQuery,
+  useGetTasksByUserQuery,
+} from "@/state/api";
 import React, { useState } from "react";
 import { useAppSelector } from "../redux";
 import ModalNewTask from "../(components)/ModalNewTask";
@@ -76,16 +80,23 @@ const PriorityPage = ({ priority }: Props) => {
   const [view, setView] = useState("list");
   const [isModalNewTaskOpen, setIsModalNewTaskOpen] = useState(false);
 
-  const userId = 1;
+  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+
+  const { data: currentUser } = useGetAuthUserQuery({});
+
+  const userId = currentUser?.userDetails.userId;
+
+  if (!userId) return null;
+
   const {
     data: tasks,
     error: tasksError,
     isLoading: tasksIsLoading,
   } = useGetTasksByUserQuery(userId, {
     pollingInterval: 0,
+    skip: !userId,
   });
 
-  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
   const filteredTasks = tasks?.filter(
     (task) => task.priority?.toLowerCase() === priority.toLowerCase(),
   );
