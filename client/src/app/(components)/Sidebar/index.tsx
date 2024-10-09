@@ -31,24 +31,6 @@ function Sidebar() {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
 
-  const { data: projects } = useGetProjectsQuery();
-  const dispatch = useAppDispatch();
-  const { isSideBarCollapsed } = useAppSelector((state) => state.global);
-
-  const { data: currentUser } = useGetAuthUserQuery({});
-
-  async function handleSignOut() {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  if (!currentUser) return null;
-
-  const currentUserDetails = currentUser.userDetails;
-
   const sidebarLinks = useMemo(() => {
     return [
       {
@@ -113,6 +95,24 @@ function Sidebar() {
       },
     ];
   }, []);
+
+  const { data: projects } = useGetProjectsQuery();
+  const dispatch = useAppDispatch();
+  const { isSideBarCollapsed } = useAppSelector((state) => state.global);
+
+  const { data: currentUser } = useGetAuthUserQuery({});
+
+  async function handleSignOut() {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  if (!currentUser) return null;
+
+  const currentUserDetails = currentUser.userDetails;
 
   const sidebarClassnames = `fixed z-40 flex h-full flex-col justify-between overflow-y-auto bg-white shadow-xl transition-all duration-300 dark:bg-black ${isSideBarCollapsed ? "w-0 hidden" : "w-64"}`;
 

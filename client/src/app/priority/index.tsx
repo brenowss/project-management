@@ -84,9 +84,7 @@ const PriorityPage = ({ priority }: Props) => {
 
   const { data: currentUser } = useGetAuthUserQuery({});
 
-  const userId = currentUser?.userDetails.userId;
-
-  if (!userId) return null;
+  const userId = currentUser?.userDetails.userId ?? 0;
 
   const {
     data: tasks,
